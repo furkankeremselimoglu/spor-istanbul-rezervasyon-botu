@@ -1,0 +1,20 @@
+# src/version.py's `_ARCHIVE` constant is rewritten by `git archive` into the
+# tag-based `git describe` string (e.g. "v2026.10.23") in any ZIP built with
+# `git archive` (see tools/make_release.py and GitHub's "Code > Download ZIP").
+# See src/version.py and tools/make_release.py for how this is used.
+src/version.py export-subst
+
+# Dev-only content: excluded from `git archive` (release ZIPs, and the public repo copy
+# tools/make_release.py --publish pushes). See CLAUDE.md / docs/DEVELOPMENT.md ("iki repo
+# modeli"). Everything NOT listed here ships, including tools/apply_update.py (copied by
+# src/updater.py at runtime) and tools/make_shortcut.py (run by install.bat/install.command).
+analysis/ export-ignore
+tests/ export-ignore
+CLAUDE.md export-ignore
+.github/ export-ignore
+docs/ export-ignore
+tools/README.md export-ignore
+tools/make_release.py export-ignore
+tools/ci_smoke.py export-ignore
+tools/measure_open_rule.py export-ignore
+tools/ui_preview.py export-ignore

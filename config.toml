@@ -1,0 +1,51 @@
+# İBB Spor İstanbul rezervasyon botu — ayarlar.
+# Değiştirdikten sonra botu yeniden başlatın.
+
+[site]
+base_url = "https://online.spor.istanbul"
+timezone = "Europe/Istanbul"
+
+[timing]
+# Seans, başlangıcından bu kadar saat önce rezervasyona açılır.
+# Ölçüldü (Ekim 2026): 72 saat -- ör. Cumartesi 14:00 seansı Çarşamba 14:00:15'te göründü.
+open_offset_hours = 72
+# Ekim 2026 duyurusu: TENİS Seviye-2 üyeler için seans, son 7 günde yeni bir seans
+# seçmişlerse 66 saat, seçmemişlerse 72 saat önce açılır (hangisi olduğu önceden
+# bilinemez). Bot her iki an için de sessizce sıcak yoklama yapar; bildirim/ekranda
+# tahmini an gösterilir. Eski config.toml'da bu alan yoksa varsayılan [72, 66] kullanılır.
+tennis_open_offsets_hours = [72, 66]
+# Tahmini açılış anından önce/sonra hızlı yoklama penceresi (saniye).
+# hot_before_s en az 60 olmalı: [session] relogin_before_open=true iken oturum tazeleme
+# (çıkış + otomatik giriş) sıcak pencerenin başında yapılır, bunun için zaman gerekir.
+hot_before_s = 120
+# Açılıştan sonra 10 dk hızlı yoklama: açılış birkaç dakika gecikirse de yakalanır.
+hot_after_s = 600
+# Normal yoklama aralığı (iptal edilen yerleri de yakalar, oturumu canlı tutar)
+idle_poll_s = 60
+# Hızlı pencere içindeki yoklama aralığı
+hot_poll_s = 1.5
+# Siteye dakikada en fazla bu kadar istek
+max_requests_per_min = 80
+
+[safety]
+# true: seansı seçer ama "Kaydet"e basmaz (deneme amaçlı)
+dry_run = false
+# Bir başarılı rezervasyondan sonra dur
+stop_after_success = true
+# Her kritik adımda ekran görüntüsü + HTML kaydet (state/artifacts)
+screenshot_every_step = true
+# Bu çalıştırmada en fazla bu kadar kez "Kaydet"e basılır (her tıklama SMS gönderebilir!)
+max_save_attempts = 1
+
+[sms]
+# Kaydet sonrası gelen SMS doğrulama kodu için insanın kodu girmesi en fazla bu kadar (sn) beklenir
+timeout_s = 300
+# Bekleme sırasında bu sıklıkla (sn) uyarı sesi tekrarlanır
+alert_every_s = 15
+
+[session]
+# Yoklama sıcak pencereye girer girmez (boşta -> sıcak geçişinde) çıkış yapıp kayıtlı
+# bilgilerle (bot.py save-login) yeniden giriş yapılsın mı -- açılış anında taze bir
+# oturumla başlamak için. Kimlik bilgisi kaydedilmemişse bu adım otomatik atlanır ve
+# mevcut oturumla devam edilir.
+relogin_before_open = true

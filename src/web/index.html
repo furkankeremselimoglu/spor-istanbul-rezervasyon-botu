@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="x-token" content="__TOKEN__">
+  <title>Spor İstanbul Rezervasyon Botu</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div id="app">
+    <!-- ================================================================ SIDEBAR -->
+    <nav class="sidebar" aria-label="Ana gezinme">
+      <div class="brand-row">
+        <svg class="brand-mark" viewBox="0 0 34 34" aria-hidden="true">
+          <defs>
+            <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#2563EB"/>
+              <stop offset="1" stop-color="#4F46E5"/>
+            </linearGradient>
+          </defs>
+          <rect width="34" height="34" rx="10" fill="url(#brandGrad)"/>
+          <path d="M8 19.5c3-3.2 5-6.7 5-10.3" stroke="#fff" stroke-width="2.1" stroke-linecap="round" fill="none"/>
+          <circle cx="22" cy="13.5" r="4.4" fill="#fff"/>
+          <path d="M18.4 13.5a3.6 3.6 0 0 1 7.2 0" stroke="#2563EB" stroke-width="1.1" fill="none"/>
+          <path d="M22 9.9v7.2M18.4 13.5h7.2" stroke="#2563EB" stroke-width="1.1"/>
+          <rect x="8.5" y="20.5" width="17" height="7.5" rx="2.2" fill="#fff" fill-opacity=".92"/>
+          <path d="M11.3 20.5v-2.1a1.3 1.3 0 0 1 2.6 0v2.1M20.1 20.5v-2.1a1.3 1.3 0 0 1 2.6 0v2.1" stroke="#2563EB" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+          <circle cx="12.6" cy="24.4" r="1" fill="#2563EB"/>
+          <circle cx="17" cy="24.4" r="1" fill="#2563EB"/>
+          <circle cx="21.4" cy="24.4" r="1" fill="#2563EB"/>
+        </svg>
+        <div class="brand-text">
+          <div class="brand-title">Spor İstanbul Rezervasyon Botu</div>
+        </div>
+      </div>
+
+      <div class="nav" role="list">
+        <button class="nav-btn" data-nav="dashboard" aria-current="page" type="button"></button>
+        <button class="nav-btn" data-nav="targets" type="button"></button>
+        <button class="nav-btn" data-nav="reservations" type="button"></button>
+        <button class="nav-btn" data-nav="account" type="button"></button>
+      </div>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="sidebar-footer">
+        <div class="account-chip" id="sidebar-account-chip">
+          <span class="dot off" aria-hidden="true"></span>
+          <span class="chip-label">Hesap yok</span>
+        </div>
+        <button class="btn btn-secondary btn-sm btn-quit-browser" id="btn-quit-browser" type="button" hidden>
+          <span class="label">Uygulamayı kapat</span>
+        </button>
+        <div class="sidebar-version" id="sidebar-version"></div>
+      </div>
+    </nav>
+
+    <!-- ===================================================================== MAIN -->
+    <div class="main">
+      <div class="conn-bar" id="conn-bar" role="status" hidden></div>
+
+      <header class="topbar">
+        <h1 id="page-title">Pano</h1>
+        <div class="status-pill" id="status-pill" data-state="idle">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="status-pill-text">Hazır</span>
+        </div>
+      </header>
+
+      <main class="content" id="content">
+        <!-- ------------------------------------------------------------- DASHBOARD -->
+        <section class="page" id="page-dashboard">
+          <div id="update-bar"></div>
+          <div id="banner-slot"></div>
+
+          <div class="grid-2">
+            <div class="card">
+              <div class="hero-top">
+                <div>
+                  <h2 class="card-title" style="margin-bottom:4px">Durum</h2>
+                  <div style="font-size:var(--fs-md);font-weight:600" id="hero-status-text">Hazır</div>
+                  <div class="hero-last-poll" id="hero-last-poll" hidden></div>
+                </div>
+                <div class="hero-actions">
+                  <button class="btn btn-secondary" id="btn-toggle-browser" type="button">
+                    <span id="btn-toggle-browser-label">Tarayıcıyı göster</span>
+                  </button>
+                  <button class="btn btn-primary btn-lg" id="btn-start-stop" type="button">
+                    <span id="btn-start-stop-label">Başlat</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="block-hint" id="block-hint" hidden></div>
+              <p class="field-hint" style="margin-top:8px">Bot, siteye kendi tarayıcısıyla bağlanır; bu tarayıcı simge durumunda çalışır. Görürseniz kapatmayın — kapatılırsa bot onu yeniden açar.</p>
+
+              <div class="hero-toggles">
+                <div class="switch-row">
+                  <div class="switch-text">
+                    <span class="switch-title">Deneme modu</span>
+                    <span class="switch-desc">Seansı seçer ama Kaydet'e basmaz.</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="toggle-dry-run">
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+                <div class="switch-row">
+                  <div class="switch-text">
+                    <span class="switch-title">İlk rezervasyonda dur</span>
+                    <span class="switch-desc">Kapalıyken, rezervasyondan sonra diğer hedeflere devam eder.</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="toggle-stop-after-success">
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+                <div class="switch-row">
+                  <div class="switch-text">
+                    <span class="switch-title">Hatırlatma bildirimi</span>
+                    <span class="switch-desc">Her açılıştan 15 dk önce hatırlatır — uygulama kapalı olsa bile.</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="toggle-reminders-enabled">
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="stack">
+              <div class="card">
+                <h2 class="card-title">Sıradaki açılış</h2>
+                <div id="next-window-slot"></div>
+              </div>
+              <div class="card" id="reminders-card" hidden>
+                <h2 class="card-title">Hatırlatmalar</h2>
+                <div id="reminders-slot"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card">
+              <h2 class="card-title">Etkinlik</h2>
+              <div class="log-feed" id="log-feed" aria-live="off"></div>
+            </div>
+            <div class="card">
+              <div class="flex items-center justify-between" style="margin-bottom:var(--sp-4)">
+                <h2 class="card-title" style="margin:0">Hedefler</h2>
+                <button class="btn-link" data-nav="targets" type="button">Tümünü gör</button>
+              </div>
+              <div class="mini-list" id="mini-targets-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- --------------------------------------------------------------- TARGETS -->
+        <section class="page" id="page-targets" hidden>
+          <div class="toolbar">
+            <p class="text-2" style="margin:0;font-size:var(--fs-xs)" id="targets-running-note" hidden></p>
+            <div class="flex gap-3" style="margin-left:auto">
+              <button class="btn btn-primary" id="btn-add-target" type="button">
+                <span>Hedef ekle</span>
+              </button>
+            </div>
+          </div>
+          <div class="targets-list" id="targets-list"></div>
+          <div class="empty-state card" id="targets-empty" hidden>
+            <svg class="illustration" viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="46" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="6 7"/>
+              <path d="M60 36v48M36 60h48" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+            </svg>
+            <h3>Henüz hedef yok</h3>
+            <p>Bir hedef eklediğinde, bot o salon/saati açıldığı anda senin için arar.</p>
+            <button class="btn btn-primary" id="btn-add-target-empty" type="button">Hedef ekle</button>
+          </div>
+        </section>
+
+        <!-- --------------------------------------------------------- RESERVATIONS -->
+        <section class="page" id="page-reservations" hidden>
+          <div class="card">
+            <div class="toolbar" style="margin-bottom:var(--sp-4)">
+              <h2 class="card-title" style="margin:0">Rezervasyonlarım</h2>
+              <button class="btn btn-secondary btn-sm" id="btn-refresh-reservations" type="button">
+                <span>Yenile</span>
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table class="res-table" id="reservations-table">
+                <thead>
+                  <tr><th>Tarih</th><th>Saat</th><th>Tesis</th><th>Salon</th><th>Durum</th><th></th></tr>
+                </thead>
+                <tbody id="reservations-tbody"></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="reservations-empty" hidden style="padding:var(--sp-6)">
+              <p>Kayıtlı rezervasyon bulunamadı. "Yenile" ile tekrar deneyin.</p>
+            </div>
+            <p class="field-hint" style="margin-top:var(--sp-4)">İptal en geç seanstan 3 saat önce yapılabilir.</p>
+          </div>
+        </section>
+
+        <!-- -------------------------------------------------------------- ACCOUNT -->
+        <section class="page" id="page-account" hidden>
+          <div class="card">
+            <h2 class="card-title">Giriş yapılı hesap</h2>
+            <div class="active-account-head">
+              <div class="active-account-id">
+                <div class="active-account-name" id="active-account-name">Henüz giriş yapılmadı</div>
+                <div class="active-account-tc" id="active-account-tc" hidden></div>
+              </div>
+              <span class="status-pill account-pill" id="account-status-pill" data-state="off">
+                <span class="dot" aria-hidden="true"></span>
+                <span id="account-status-pill-text">Hesap yok</span>
+              </span>
+            </div>
+            <p class="text-2" id="login-result-text" style="margin:var(--sp-3) 0 0;font-size:var(--fs-xs)"></p>
+            <div class="account-status-row" id="account-status-row"></div>
+            <div class="flex gap-3" style="margin-top:var(--sp-4)">
+              <button class="btn btn-secondary" id="btn-check-login" type="button">Bağlantıyı test et</button>
+              <button class="btn btn-secondary" id="btn-manual-login" type="button">Tarayıcıda elle giriş</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title">Kayıtlı hesaplar</h2>
+            <div class="account-list" id="accounts-list"></div>
+
+            <button class="add-account-toggle" id="btn-toggle-add-account" type="button" aria-expanded="false" aria-controls="add-account-form">
+              <span id="btn-toggle-add-account-label">Hesap ekle</span>
+            </button>
+            <div class="add-account-form" id="add-account-form" hidden>
+              <div class="field">
+                <label class="field-label" for="input-tc">TC Kimlik No</label>
+                <input type="text" id="input-tc" inputmode="numeric" maxlength="11" placeholder="11 haneli TC Kimlik No" autocomplete="off">
+              </div>
+              <div class="field">
+                <label class="field-label" for="input-password">Şifre</label>
+                <div class="input-affix">
+                  <input type="password" id="input-password" autocomplete="new-password" placeholder="Şifre">
+                  <button class="affix-btn" id="btn-toggle-password" type="button" aria-label="Şifreyi göster"></button>
+                </div>
+              </div>
+              <div class="field-error" id="add-account-error"></div>
+              <button class="btn btn-primary" id="btn-save-credentials" type="button">Kaydet ve giriş yap</button>
+
+              <div class="privacy-note">
+                <svg class="icon sm" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+                <span>Şifreniz yalnızca bu bilgisayarın şifre deposunda (Windows Kimlik Bilgisi Yöneticisi / macOS Anahtar Zinciri) saklanır.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card">
+              <h2 class="card-title">Üyelik</h2>
+              <div class="field">
+                <label class="field-label" for="select-membership">Kullanılacak üyelik</label>
+                <select id="select-membership"></select>
+              </div>
+              <button class="btn btn-secondary btn-sm" id="btn-list-memberships" type="button">Üyelikleri getir</button>
+            </div>
+
+            <div class="card">
+              <h2 class="card-title">Yardım</h2>
+              <p class="text-2" style="margin:0 0 var(--sp-4);font-size:var(--fs-xs)">
+                Bir sorun yaşarsanız, bu dosyayı geliştiriciye gönderin. Kişisel bilgileriniz
+                (TC Kimlik No, şifre) bu pakete dahil edilmez.
+              </p>
+              <button class="btn btn-secondary btn-sm" id="btn-export-diagnostics" type="button">
+                <span>Tanı paketi oluştur</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- ============================================================= SMS MODAL -->
+  <div class="dialog-scrim" id="sms-scrim">
+    <div class="dialog sms-dialog" role="dialog" aria-modal="true" aria-labelledby="sms-title">
+      <h2 id="sms-title">SMS kodunu girin</h2>
+      <p class="sms-card-text" id="sms-card-text"></p>
+
+      <div class="sms-countdown-wrap">
+        <svg class="sms-ring" viewBox="0 0 64 64">
+          <circle class="bg" cx="32" cy="32" r="28" fill="none" stroke-width="5"/>
+          <circle class="fg" id="sms-ring-fg" cx="32" cy="32" r="28" fill="none" stroke-width="5"
+            stroke-dasharray="175.9" stroke-dashoffset="0" transform="rotate(-90 32 32)"/>
+          <text class="sms-ring-text" id="sms-ring-text" x="32" y="36" text-anchor="middle">60</text>
+        </svg>
+      </div>
+
+      <input id="sms-input" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8"
+        aria-label="SMS kodu" placeholder="••••">
+      <div class="sms-error" id="sms-error" role="alert"></div>
+
+      <div class="dialog-actions" style="justify-content:center;margin-top:var(--sp-4)">
+        <button class="btn btn-primary btn-lg w-full" id="btn-sms-submit" type="button">Doğrula</button>
+      </div>
+      <p class="sms-hint">Kodu telefonunuza gelen SMS'ten girin.</p>
+    </div>
+  </div>
+
+  <!-- ================================================================ DRAWER -->
+  <div class="scrim" id="drawer-scrim"></div>
+  <aside class="drawer" id="target-drawer" aria-label="Hedef düzenle" role="dialog" aria-modal="true">
+    <div class="drawer-header">
+      <h2 id="drawer-title">Hedef ekle</h2>
+      <button class="btn btn-ghost btn-icon" id="btn-drawer-close" type="button" aria-label="Kapat"></button>
+    </div>
+    <div class="drawer-body" id="drawer-body">
+      <div class="running-note" id="drawer-running-note" hidden></div>
+
+      <div class="field">
+        <label class="field-label" for="field-name">Ad</label>
+        <input type="text" id="field-name" placeholder="Örn. Cuma akşam tenis">
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title"><span class="num">1</span>Branş &amp; Tesis</div>
+        <div class="field">
+          <label class="field-label" for="field-branch">Branş</label>
+          <div class="field-row">
+            <select id="field-branch"></select>
+            <button class="scan-link" id="btn-scan-branches" type="button" style="flex:none"></button>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="field-facility">Tesis</label>
+          <div class="field-row">
+            <select id="field-facility"></select>
+            <button class="scan-link" id="btn-scan-facilities" type="button" style="flex:none"></button>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="field-level">Seviye</label>
+          <select id="field-level"></select>
+        </div>
+        <div class="catalog-note" id="catalog-note" hidden></div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title"><span class="num">2</span>Salon / Kort</div>
+        <div class="field">
+          <div class="flex items-center justify-between" style="margin-bottom:6px">
+            <label class="field-label" style="margin:0">Salon / Kort</label>
+            <button class="scan-link" id="btn-scan-grids" type="button"></button>
+          </div>
+          <div class="hall-chips" id="hall-chips"></div>
+          <p class="field-hint">Hiçbiri seçilmezse: tüm salonlar.</p>
+          <div class="progress-row" id="scan-progress-row" hidden>
+            <div class="progress-track" style="flex:1"><div class="progress-fill" id="scan-progress-fill" style="width:0%"></div></div>
+            <span class="progress-label" id="scan-progress-label"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title"><span class="num">3</span>Günler</div>
+        <div class="day-chips" id="day-chips"></div>
+        <div class="field-error" id="days-error"></div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title"><span class="num">4</span>Saat</div>
+        <div class="segmented" id="time-mode-segmented" role="group" aria-label="Saat modu">
+          <button type="button" data-mode="range" aria-pressed="true">Saat aralığı</button>
+          <button type="button" data-mode="specific" aria-pressed="false">Belirli saatler</button>
+        </div>
+
+        <div id="time-range-group" style="margin-top:var(--sp-4)">
+          <div class="field-row">
+            <div class="field" style="margin-bottom:0">
+              <label class="field-label" for="field-time-from">Başlangıç</label>
+              <select id="field-time-from"></select>
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label class="field-label" for="field-time-to">Bitiş</label>
+              <select id="field-time-to"></select>
+            </div>
+          </div>
+        </div>
+
+        <div id="time-specific-group" style="margin-top:var(--sp-4)" hidden>
+          <div class="start-chips" id="start-chips"></div>
+          <div class="field-row" style="margin-top:var(--sp-3)">
+            <input type="text" id="field-custom-start" placeholder="HH:MM" maxlength="5" style="flex:none;width:90px">
+            <button class="btn btn-secondary btn-sm" id="btn-add-custom-start" type="button" style="flex:none">Özel saat ekle</button>
+          </div>
+        </div>
+
+        <p class="field-hint" style="margin-top:var(--sp-4)">Not: salon/saat listeleri sadece ~3 gün ileriye görünür; zamanla büyür.</p>
+      </div>
+
+      <div class="field-error" id="drawer-error"></div>
+    </div>
+    <div class="drawer-footer">
+      <button class="btn btn-danger-outline" id="btn-delete-target" type="button" hidden>Sil</button>
+      <div class="drawer-footer-right">
+        <button class="btn btn-secondary" id="btn-drawer-cancel" type="button">İptal</button>
+        <button class="btn btn-primary" id="btn-drawer-save" type="button">Kaydet</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- =============================================================== CONFIRM -->
+  <div class="dialog-scrim" id="confirm-scrim">
+    <div class="dialog danger-dialog" id="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
+      <div class="dialog-icon" id="confirm-icon"></div>
+      <h2 id="confirm-title"></h2>
+      <p id="confirm-text"></p>
+      <div class="dialog-actions">
+        <button class="btn btn-secondary" id="confirm-cancel" type="button">İptal</button>
+        <button class="btn btn-danger" id="confirm-ok" type="button">Onayla</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ TOASTS -->
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+  <div class="sr-only" id="aria-live-region" aria-live="polite"></div>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>

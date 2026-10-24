@@ -1,0 +1,7 @@
+playwright==1.63.0
+beautifulsoup4==4.15.0
+pytest==9.1.1
+keyring==25.7.0
+tzdata==2026.5
+pywebview==6.2.1
+certifi==2026.10.23
