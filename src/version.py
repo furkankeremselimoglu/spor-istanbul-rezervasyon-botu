@@ -26,7 +26,7 @@ from pathlib import Path
 
 # Rewritten by `git archive` when `.gitattributes` marks this path `export-subst`.
 # Left untouched (literal "...") in a plain checkout or a non-archive copy.
-_ARCHIVE = "v2026.10.24"
+_ARCHIVE = "v2026.10.24.2"
 
 ROOT = Path(__file__).resolve().parent.parent
 

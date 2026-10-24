@@ -12,53 +12,44 @@ Bot her hedefin açılış anını **ve** mevcut rezervasyonlarda iptal olup olm
 
 ## Kurulum — Windows
 
-1. **Python kontrol et / yükle** (varsa adım 2'ye geç):
-   - `Win + R` açıp `cmd` yazıp Enter'e basın
-   - `py --version` yazıp Enter'e basın
-   - Python 3.12+ görülürse iyidir, adım 2'ye geçin
-   - Yoksa: adım 3'teki `install.bat`'ı çalıştırın — winget ile otomatik kurmayı dener; winget yoksa [python.org](https://www.python.org/downloads/) sayfasını açar, kurulumda **"Add python.exe to PATH"** seçeneğini MUTLAKA işaretleyin
+1. **PowerShell'i açın**: Başlat menüsüne `PowerShell` yazıp **Windows PowerShell**'i açın (Komut İstemi/cmd değil). Windows 10 ya da 11 güncel olmalı.
 
-2. **Proje klasörünü indir ve çıkar**:
-   - [Releases sayfasından](https://github.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/releases/latest) **Assets** altındaki `spor-istanbul-rezervasyon-botu-vYYYY.MM.DD.zip` dosyasını indirin — sayfanın üstündeki yeşil **"Code"** düğmesinden **"Download ZIP"** yapmayın, o kopya sonraki güncellemeleri doğru tanıyamaz
-   - Sağ tık › Tümünü Çıkar (ya da sağ tık › 7-Zip › Buraya Çıkar)
-   - Proje klasörü hazır
+2. **Şu satırı kopyalayıp PowerShell'e yapıştırın ve Enter'a basın**:
+   ```
+   irm https://raw.githubusercontent.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/main/install.ps1 | iex
+   ```
+   - En yeni sürümü indirir, doğrular, `%LOCALAPPDATA%\Programs\spor-istanbul-rezervasyon-botu` klasörüne kurar ve kurulumu başlatır; birkaç dakika sürer. Uyarı penceresi çıkmaz, yönetici izni gerekmez
+   - Python yoksa kurulum onu kendisi kurmayı dener; olmazsa python.org sayfasını açar (kurarken **"Add python.exe to PATH"** kutusunu işaretleyin). Ekranda istenen adımı yapın (gerekirse Windows oturumunu kapatıp açın), sonra aynı satırı tekrar yapıştırın
 
-3. **install.bat çalıştır**:
-   - Proje klasöründe `install.bat` dosyasını çift tıklayın
-   - Eğer SmartScreen uyarısı çıkarsa: "Daha fazla bilgi" › "Yine de çalıştır"
-   - Betik Python paketlerini ve bot'un kullandığı tarayıcıyı (Chromium) indirir, birkaç dakika sürebilir — tarayıcıda giriş yapmanız istenmez, bu adım sadece kurulumdur
-   - Masaüstünde **"Spor İstanbul Rezervasyon Botu"** kısayolu oluşur
-   - Kurulum bitince "Uygulama şimdi açılsın mı?" diye sorar, isterseniz hemen açabilirsiniz
-
-4. **İlk kez çalıştır**:
+3. **İlk kez çalıştır**:
    - Masaüstündeki **"Spor İstanbul Rezervasyon Botu"** simgesine çift tıklayın
    - Uygulama penceresi açılır → "Hesap" sekmesine gidin (aşağıya bakın)
 
 ## Kurulum — macOS
 
-1. **Python yükle** (varsa adım 2'ye geç):
-   - Terminal açın: `⌘ + Space`, `terminal` yazın, Enter
-   - `python3 --version` yazıp Enter'e basın
-   - Python 3.12+ görülürse iyidir, adım 2'ye geçin
-   - Yoksa: [python.org](https://www.python.org/downloads/) sayfasından Python 3.12+ indirip kurun
+1. **Terminal'i açın**: `⌘ + Boşluk` tuşlarına basın, `terminal` yazıp Enter'a basın.
 
-2. **Proje klasörünü indir ve çıkar**:
-   - [Releases sayfasından](https://github.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/releases/latest) **Assets** altındaki `spor-istanbul-rezervasyon-botu-vYYYY.MM.DD.zip` dosyasını indirin — sayfanın üstündeki yeşil **"Code"** düğmesinden **"Download ZIP"** yapmayın, o kopya sonraki güncellemeleri doğru tanıyamaz
-   - `Finder`de çift tıklayın (otomatik çıkılır)
-   - Proje klasörü hazır
+2. **Şu satırı kopyalayıp Terminal'e yapıştırın ve Enter'a basın**:
+   ```
+   bash -c "$(curl -fsSL https://raw.githubusercontent.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/main/install.sh)"
+   ```
+   - En yeni sürümü indirir, doğrular, ana klasörünüzdeki `spor-istanbul-rezervasyon-botu` klasörüne kurar ve kurulumu başlatır; birkaç dakika sürer. "Apple doğrulayamadı" uyarısı çıkmaz
+   - Python 3.12 veya üstü yoksa kurulum python.org indirme sayfasını açar; Python'u kurduktan sonra aynı satırı tekrar yapıştırın
+   - **"Terminal masaüstüne erişmek istiyor"** diye bir izin sorarsa **İzin Ver**'e basın (masaüstü kısayolu için)
 
-3. **install.command çalıştır**:
-   - Proje klasöründe `install.command` dosyasına sağ tıklayın
-   - "Aç" seçin
-   - Gatekeeper uyarısı çıkarsa: "Aç" tıklayın
-   - Terminal açılır, Python paketlerini ve bot'un kullandığı tarayıcıyı (Chromium) indirir, birkaç dakika sürebilir
-   - Masaüstünde **"Spor İstanbul Rezervasyon Botu"** uygulaması oluşur (Terminal penceresi açmadan çalışır)
-
-4. **İlk kez çalıştır**:
-   - Masaüstündeki **"Spor İstanbul Rezervasyon Botu"**'ne sağ tık › "Aç"
+3. **İlk kez çalıştır**:
+   - Masaüstündeki **"Spor İstanbul Rezervasyon Botu"** uygulamasına çift tıklayın
    - Uygulama penceresi açılır → "Hesap" sekmesine gidin (aşağıya bakın)
 
-Not: Daha sonra yeni bir sürüm çıktığında ZIP'i tekrar indirmeniz gerekmez — uygulama içinden tek tıkla güncellenir (bkz. aşağıdaki "Güncelleme" bölümü).
+## Alternatif: ZIP ile Kurulum
+
+Tek satırlık kurulum işlemedi veya eski bir kurulumunuz varsa:
+
+1. [Releases sayfasından](https://github.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/releases/latest) **Assets** altındaki `spor-istanbul-rezervasyon-botu-vYYYY.MM.DD.zip` dosyasını indirin (sayfanın üstündeki yeşil **"Code"** düğmesinden **"Download ZIP"** yapmayın, o kopya güncellemeleri doğru tanıyamaz)
+2. ZIP dosyasını çıkarın
+3. **Windows**: Klasörde `install.bat` dosyasını çift tıklayın. **macOS**: Klasörde `install.command` dosyasına çift tıklayın, **"Apple ... doğrulayamadı"** uyarısı çıkarsa "Bitti"ye basıp Sistem Ayarları › Gizlilik ve Güvenlik › "Yine de Aç"ya basın (veya Terminal'de `bash ` yazıp `install.command`'ı Terminal penceresine sürükleyin)
+
+**Not:** Daha sonra yeni bir sürüm çıktığında ZIP'i tekrar indirmeniz gerekmez — uygulama içinden tek tıkla güncellenir (bkz. aşağıdaki "Güncelleme" bölümü).
 
 ## İlk Kullanım — Adım Adım
 
@@ -210,9 +201,16 @@ Eski dosyaların yedeği `state/update/backup/` klasörüne kaydedilir. Güncell
 
 Güncelleme işlemi ayrıntılarını `state/logs/update.log` dosyasında bulabilirsiniz.
 
-### Elle Güncelleme (Eski Sürümleri İçin)
+### Elle Güncelleme
 
-Kurulu sürümünüz bu özelliği desteklemiyorsa, elle güncelleme yapabilirsiniz:
+Güncelleme bildirimi gelmiyorsa veya elle güncelleme yapmak istiyorsanız:
+
+**Tek satırlık kurumla kurduysanız:** Aynı komutları tekrar çalıştırın (`state/` klasörü (ayarlar, hedefler, seanslar) otomatik korunur):
+
+- **Windows**: `irm https://raw.githubusercontent.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/main/install.ps1 | iex`
+- **macOS**: `bash -c "$(curl -fsSL https://raw.githubusercontent.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/main/install.sh)"`
+
+**ZIP ile kurduysanız:**
 
 1. [GitHub Releases sayfasından](https://github.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/releases/latest) **Assets** altındaki en yeni ZIP dosyasını indirin (yeşil "Code" düğmesinden değil)
 2. ZIP dosyasını çıkarın, eski proje klasörünün **üzerine** çıkarın
@@ -222,9 +220,9 @@ Kurulu sürümünüz bu özelliği desteklemiyorsa, elle güncelleme yapabilirsi
 
 ## Sorun Giderme
 
-**SmartScreen / Gatekeeper uyarısı:**
+**SmartScreen / Gatekeeper uyarısı** (yalnız ZIP ile kurulumda çıkar; tek satırlık kurulumda çıkmaz):
 - Windows: "Daha fazla bilgi" › "Yine de çalıştır"
-- macOS: sağ tık › "Aç"
+- macOS: uyarıda "Bitti" › Sistem Ayarları › Gizlilik ve Güvenlik › "Yine de Aç" (macOS 15 ve sonrasında "sağ tık › Aç" artık işe yaramıyor)
 
 **"Uygulama açık; önce uygulamayı kapatın" / "Uygulama zaten açık" hatası:**
 - Önce gerçekten başka bir pencere/işlem açık mı kontrol edin (Görev Yöneticisi / Activity Monitor'da `pythonw`/`python` arayın) ve varsa kapatın
@@ -239,5 +237,7 @@ Kurulu sürümünüz bu özelliği desteklemiyorsa, elle güncelleme yapabilirsi
 - `state/artifacts/` → kritik noktaların ekran görüntüleri (HTML + PNG)
 
 ---
+
+**Komutun ne yaptığını görmek için:** [install.sh](https://github.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/blob/main/install.sh) (macOS) / [install.ps1](https://github.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/blob/main/install.ps1) (Windows)
 
 Tüm hakları saklıdır. Kaynak kod incelenebilir; izinsiz yeniden dağıtılamaz.

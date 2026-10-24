@@ -4,6 +4,11 @@ Bu dosya kullanıcıları ilgilendiren değişiklikleri listeler. Format [Keep a
 
 ## [Yayınlanmamış]
 
+### Eklendi
+- Tek satırlık kurulum: macOS ve Windows'ta `install.sh` / `install.ps1` tarafından sürüm otomatik indirilir, kurulur ve güncellenebilir
+
+## [v2026.10.24] - 2026-10-24
+
 ### Değişti
 - Bot artık **bütün branşlarda** (tenis, fitness, yüzme, vb.) çalışıyor; arayüz ve mesajlarda "salon" ifadesi kullanılıyor (kort/havuz vb. yerine genel terim)
 - Hedefler artık **salon bazında** (aynı salonun diğer saatleriyle) eşleştiriliyor
