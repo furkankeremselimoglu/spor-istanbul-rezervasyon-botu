@@ -39,7 +39,8 @@ from src.browser import (
     Stopped,
     save_cookies_now,
 )
-from src.grid import Grid, SessionCard, Status, find_card, is_selection_page, parse_grid
+from src.grid import (Grid, SessionCard, Status, find_card, has_filters, is_selection_page,
+                      parse_grid)
 
 if TYPE_CHECKING:
     from src.reservations import Reservation
@@ -199,18 +200,22 @@ def select_option_texts(html: str, select_id: str) -> list[str]:
 
 
 def _product_column_index(soup: BeautifulSoup) -> int | None:
-    """Index of the "Ürün (Türü)" column in the Seanslarım membership table's <thead>."""
+    """Index of the product-NAME column ("Spor") in the Seanslarım membership table's
+    <thead>, else the "Ürün Türü" column. The type alone ("Paket"/"Bilet") is the same
+    for every ticket, so it can't tell two rows apart."""
     thead = soup.find("thead")
     if thead is None:
         return None
-    for i, th in enumerate(thead.find_all("th")):
-        if "Ürün" in th.get_text(" ", strip=True):
-            return i
+    headers = [th.get_text(" ", strip=True) for th in thead.find_all("th")]
+    for wanted in ("Spor", "Ürün"):
+        for i, text in enumerate(headers):
+            if wanted in text:
+                return i
     return None
 
 
 def _row_label(tr, product_idx: int | None) -> str:
-    """Short label for a membership row: its "Ürün" cell if that column is identifiable
+    """Short label for a membership row: its product cell if that column is identifiable
     and non-empty, else the whole row's text, whitespace-normalized."""
     if product_idx is not None:
         tds = tr.find_all("td", recursive=False)
@@ -534,6 +539,9 @@ class Site:
                 self.artifacts.save(self.page, "error_membership_no_link", force=True)
                 raise SiteError("üyelik listesinde seans seçim bağlantısı yok")
 
+        # Kept for apply_filters: a "Bilet" page has no dropdowns to verify the target against.
+        self._membership_row_text = link.first.locator("xpath=ancestor::tr[1]").inner_text()
+
         self.limiter.acquire()
         with self.page.expect_navigation(wait_until="domcontentloaded"):
             link.first.click()
@@ -573,6 +581,8 @@ class Site:
     def list_facilities(self, branch: str) -> list[str]:
         """Facility names offered for `branch` (does one branch postback)."""
         self._ensure_on_selection_page()
+        if not has_filters(self.page.content()):
+            return []
         self._select_branch(branch)
         names = select_option_texts(self.page.content(), "ddlTesisFiltre")
         # Only the branch was selected (facility dropdown was just repopulated), so
@@ -610,6 +620,9 @@ class Site:
     def apply_filters(self, branch: str, facility: str) -> Grid:
         """Select branch, wait for its postback, then select facility. Verifies both."""
         t0 = time.monotonic()
+        html = self.page.content()
+        if not has_filters(html):
+            return self._ticket_grid(html, branch, facility)
         self._select_branch(branch)
         # Facility options are repopulated by the branch postback; only select facility
         # after that navigation has fully finished (see _select_branch).
@@ -617,6 +630,20 @@ class Site:
         self.artifacts.save(self.page, "filters")
         self.log.info("apply_filters done in %.0fms", (time.monotonic() - t0) * 1000)
         return grid
+
+    def _ticket_grid(self, html: str, branch: str, facility: str) -> Grid:
+        """Grid of a "Bilet" membership's page, which shows one fixed branch + facility and
+        has no dropdowns. Fail closed unless the membership row names both, so a target
+        for another facility is never booked on this ticket."""
+        row = " ".join(getattr(self, "_membership_row_text", "").split())
+        if branch not in row or facility not in row:
+            raise SiteError(
+                f"Seçili üyelik (bilet) yalnızca kendi branş/tesisinde geçerli; hedef "
+                f"{branch} / {facility} bu üyelikle açılamıyor. Hesap › Üyelik'ten doğru "
+                f"üyeliği seçin."
+            )
+        self.log.info("bilet üyeliği: branş/tesis filtresi yok, sayfadaki seanslar kullanılıyor")
+        return parse_grid(html)
 
     @_needs_page
     def ensure_ready(self, branch: str | None = None, facility: str | None = None) -> Grid:
@@ -862,6 +889,9 @@ class Site:
         if self.current is None:
             raise SiteError("refresh: self.current is None; call ensure_ready/switch_to first")
         branch, facility = self.current
+        if not has_filters(self.page.content()):
+            # "Bilet" page: no dropdown to re-select, so reopen it from /uyespor.
+            return self.ensure_ready(branch, facility)
         try:
             # A postback that keeps the same facility selected does NOT re-query the
             # grid: ASP.NET only fires SelectedIndexChanged when the value changes, so
@@ -911,7 +941,8 @@ class Site:
             return self.refresh()
 
         try:
-            on_selection_page = is_selection_page(self.page.content())
+            html = self.page.content()
+            on_selection_page = is_selection_page(html) and has_filters(html)
         except Exception:
             on_selection_page = False
 

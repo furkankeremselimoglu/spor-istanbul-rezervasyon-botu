@@ -2,11 +2,13 @@
 
 Üyeliğinizin kapsadığı branşlarda (tenis, fitness, yüzme, vb.) boş seansları otomatik olarak rezerve eden masaüstü uygulaması (Windows + macOS).
 
+> **Resmi değildir.** Bu uygulamanın İBB veya Spor İstanbul ile hiçbir bağlantısı yoktur. Kullanım sorumluluğu size aittir; sitenin kullanım koşullarına uymak sizin sorumluluğunuzdadır.
+
 ## Ne Yapar?
 
-**online.spor.istanbul** sayfasında istediğiniz branş, tesis, kort/salon, gün ve saat için bir seans **açılır açılmaz** (seans saatinden tam **72 saat önce** — ör. Cuma 20:00 seansı Salı 20:00'de açılır) ya da **iptalle yer boşalınca** otomatik olarak rezervasyonu yapar. Bilgisayarınız açık ve internet bağlantılı olduğu sürece arka planda çalışır. SMS doğrulama kodunu siz girersiniz (5 dakika içinde).
+**online.spor.istanbul** sayfasında istediğiniz branş, tesis, salon, gün ve saat için bir seans **açılır açılmaz** (seans saatinden tam **72 saat önce** — ör. Cuma 20:00 seansı Salı 20:00'de açılır) ya da **iptalle yer boşalınca** otomatik olarak rezervasyonu yapar. Bilgisayarınız açık ve internet bağlantılı olduğu sürece arka planda çalışır. SMS doğrulama kodunu siz girersiniz (5 dakika içinde).
 
-Bot her hedefin açılış anını **ve** mevcut rezervasyonlarda iptal olup olmadığını aynı anda izler — yani bir seans hem ilk açıldığı anda hem de başkası iptal ettiği için sonradan boşaldığında yakalanabilir. **Hafta sınırı önemli**: 72 saatlik pencere yüzünden bazı açılışlar hafta değişiminde (Pazartesi 00:00 civarı) gerçekleşir — bot bunu da izler, ama "her zaman Salı/Çarşamba açılır" gibi bir varsayımda bulunmayın; gerçek açılış anı `bot.py probe` veya `bot.py watch` ile ölçülebilir (bkz. `analysis/open-rule-2026-10/`).
+Bot her hedefin açılış anını **ve** mevcut rezervasyonlarda iptal olup olmadığını aynı anda izler — yani bir seans hem ilk açıldığı anda hem de başkası iptal ettiği için sonradan boşaldığında yakalanabilir. **Hafta sınırı önemli**: 72 saatlik pencere yüzünden bazı açılışlar hafta değişiminde (Pazartesi 00:00 civarı) gerçekleşir — bot bunu da izler, ama "her zaman Salı/Çarşamba açılır" gibi bir varsayımda bulunmayın.
 
 **Tenis Seviye-2 için 66/72 saat kuralı** (Ekim 2026 duyurusu): TENİS Seviye-2 hedeflerde seans, son 7 günde yeni bir seans seçmişseniz 66 saat, seçmemişseniz 72 saat önce açılabilir — hangisi olacağı önceden kesin bilinemez. Bot bu iki anı da otomatik olarak sessizce izler; siz Pano'da ve hatırlatmalarda sadece tek bir tahmini açılış anı görürsünüz. Diğer tüm hedefler (Seviye-1/3/"Herhangi" dahil, tenis olmayan branşlar da dahil) her zaman sabit 72 saat kuralını kullanır.
 
@@ -62,7 +64,7 @@ Bot açıldığında dört sekme görürsünüz: **Pano**, **Hedefler**, **Rezer
 3. Şifreniz işletim sisteminizin şifre yöneticisine kaydedilir (dosyaya yazılmaz)
 4. **"Bağlantıyı test et"** tıklayın → başarılıysa durum "Giriş yapılı" olur
 5. Giriş olmazsa **"Tarayıcıda elle giriş"** butonuyla tarayıcıda elle giriş yapabilirsiniz
-6. **"Yardım"** kartındaki **"Tanı paketi oluştur"** butonu: bir sorun yaşarsanız bu butona basın, Masaüstüne redakte edilmiş (kişisel bilgileriniz maskelenmiş) bir `ibbspor-tani-<tarih>.zip` dosyası iner — bunu botun yazarına gönderin. Aynı işlem terminalden `python bot.py diagnostics` ile de yapılabilir. Bkz. aşağıda "Tanı Paketi (Destek)".
+6. Bir sorun yaşarsanız **"Yardım"** kartındaki **"Tanı paketi oluştur"** butonunu kullanın (bkz. aşağıda "Tanı Paketi (Destek)")
 
 Not: Birden fazla hesap ekleyip "Kayıtlı hesaplar" listesinden aralarında geçiş yapabilirsiniz. Farklı branşlar için farklı üyelik kullanmanız gerekiyorsa "Üyelik" kartındaki "Üyelikleri getir" ile hangi üyeliğin kullanılacağını seçebilirsiniz.
 
@@ -74,15 +76,14 @@ Burada arzuladığınız seansları tanımlarsınız. Bir hedef eklemek için:
 2. **Branş** seçin; liste boşsa yanındaki **"Branşları getir"** ile yükleyin (TENİS, FİTNESS, YÜZME, vs.)
 3. **Tesis** seçin; yanındaki **"Tesisleri getir"** ile o branşın tesislerini yükleyin
 4. **Seviye** seçin (Seviye-1, Seviye-2, vs. veya "Herhangi")
-
-Yarım saatte başlayan seanslar (ör. 06:30) için hedefi kaydetmeden önce "Salon ve saatleri tara" yapın ya da "Belirli saatler" ile saati girin.
-
 5. **"Salon ve saatleri tara"** ile o tesisteki salonları getirin, isterseniz belirli salonları seçin (hiçbiri seçilmezse tüm salonlar)
 6. **Günler** seçin (Pazartesi...Pazar, birden fazla seçilebilir)
 7. **Saat** tanımlayın:
    - **Saat aralığı**: "Başlangıç" (ör. 18:00) ve "Bitiş" (ör. 21:00)
    - **Belirli saatler**: saat çiplerinden seçin veya "Özel saat ekle" ile ekleyin (ör. 20:00, 21:00)
 8. **Kaydet** tıklayın
+
+Yarım saatte başlayan seanslar (ör. 06:30) için hedefi kaydetmeden önce "Salon ve saatleri tara" yapın ya da "Belirli saatler" ile saati girin.
 
 **Listeler**: Şubeler, tesisler, salonlar, seviyeler **ve saatleri** tamamen katalogdan çekiliyor (bot tarafından önceden tarandı). İlk açıldığında kısıtlı olabilir; bot çalışırken zenginleşir.
 
@@ -107,10 +108,10 @@ Yarım saatte başlayan seanslar (ör. 06:30) için hedefi kaydetmeden önce "Sa
 - **Bilgisayar açık ve prizde kalmalı.** macOS'ta bot çalışırken uykuya geçişi kendisi engeller (`caffeinate`); **Windows'ta bunu siz ayarlamalısınız** — aşağıdaki "Windows'ta Bilgisayarın Uyumaması İçin" bölümüne bakın
 - **Aynı hesapla iki cihazda çalıştırmayın** — site kilitler
 - **Telefon yanınızda olsun** — SMS kodu almanız gerek
-- **"Kaydet"e her çalıştırmada en fazla 1 kez basılır** (varsayılan: `config.toml` → `[safety] max_save_attempts = 1`). SMS yağmurunu önlemek için telefon yanınızda bulunmalı
+- **"Kaydet"e her çalıştırmada en fazla 1 kez basılır** — size art arda SMS gelmez
 - **Oturum düşerse** bot otomatik yeniden giriş yapmaya çalışır (kimlik bilgisi kaydedilmişse)
 - Oturum kaydedilmemişse elle giriş yapmanız istenir
-- **Sürüm numarası** sol kenar çubuğunda (sidebar) görünür — bir sorunu bildirirken bu numarayı da belirtin (ya da terminalden `python bot.py version`)
+- **Sürüm numarası** sol kenar çubuğunda (sidebar) görünür — bir sorunu bildirirken bu numarayı da belirtin
 - **Bir güne zaten rezervasyonunuz varsa** bot o güne ikinci bir seans almaz (branş farklı olsa bile).
 
 ## Hatırlatma Bildirimi
@@ -129,10 +130,7 @@ Bot, belirttiğiniz seanslar için 15 dakika öncesinden hatırlatma gösterebil
 
 ### Kapatma
 
-Hatırlatmaları iki yoldan kapatabilirsiniz:
-
-1. **Uygulamada**: **Pano** › **Hatırlatma bildirimi** anahtarını kapatın
-2. **Komut satırından**: Terminalden `python bot.py reminders --off` komutunu çalıştırın
+**Pano** › **Hatırlatma bildirimi** anahtarını kapatın.
 
 ### Manuel Kaldırma
 
@@ -155,18 +153,17 @@ Bu ayarları yapmazsanız bilgisayar uykuya geçtiğinde bot duraklar ve seansı
 
 ## Tanı Paketi (Destek)
 
-Bir sorun yaşadığınızda botun yazarına göndermek üzere **redakte edilmiş** (kişisel
+Bir sorun yaşadığınızda geliştiriciye göndermek üzere **redakte edilmiş** (kişisel
 bilgileriniz otomatik olarak maskelenmiş) bir tanı paketi oluşturabilirsiniz:
 
 - Uygulamada: **Hesap** sekmesi › **Yardım** › **"Tanı paketi oluştur"** butonu → Masaüstüne `ibbspor-tani-<tarih-saat>.zip` iner
-- Terminalden: `python bot.py diagnostics` (varsayılan hedef: Masaüstü; `--dest KLASÖR` ile değiştirilebilir)
 
 Pakette: güncel loglar, son 40 sayfa anlık görüntüsü (yalnızca HTML, ekran görüntüsü
 **değil**), ayarlarınız ve sürüm/sistem bilgisi bulunur. TC kimlik no, telefon numarası,
 ad-soyad ve oturum belirteçleri otomatik maskelenir; giriş oturumunuz (çerezler) ve
 şifreniz **hiçbir zaman** pakete dahil edilmez. Ayrıntı için `state/README.md`'ye bakın.
 
-## Güncelleme (Alan İçin)
+## Güncelleme
 
 Uygulamaya yeni sürüm gelirse web arayüzünde bir bildirim çubuğu görüntülenir. Otomatik güncelleme şu şekilde işler:
 
@@ -205,7 +202,7 @@ Güncelleme işlemi ayrıntılarını `state/logs/update.log` dosyasında bulabi
 
 Güncelleme bildirimi gelmiyorsa veya elle güncelleme yapmak istiyorsanız:
 
-**Tek satırlık kurumla kurduysanız:** Aynı komutları tekrar çalıştırın (`state/` klasörü (ayarlar, hedefler, seanslar) otomatik korunur):
+**Tek satırlık komutla kurduysanız:** Aynı komutu tekrar çalıştırın (`state/` klasörü (ayarlar, hedefler, seanslar) otomatik korunur):
 
 - **Windows**: `irm https://raw.githubusercontent.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/main/install.ps1 | iex`
 - **macOS**: `bash -c "$(curl -fsSL https://raw.githubusercontent.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/main/install.sh)"`
@@ -213,10 +210,23 @@ Güncelleme bildirimi gelmiyorsa veya elle güncelleme yapmak istiyorsanız:
 **ZIP ile kurduysanız:**
 
 1. [GitHub Releases sayfasından](https://github.com/furkankeremselimoglu/spor-istanbul-rezervasyon-botu/releases/latest) **Assets** altındaki en yeni ZIP dosyasını indirin (yeşil "Code" düğmesinden değil)
-2. ZIP dosyasını çıkarın, eski proje klasörünün **üzerine** çıkarın
+2. ZIP'i eski kurulum klasörünün **üzerine** çıkarın
 3. **`state/` klasörüne dokunmayın** (ayarlar, katalog, seanslar, oturum dosyaları hepsi burada)
 4. `install.bat` (Windows) ya da `install.command` (macOS)'u çalıştırın
 5. **"Spor İstanbul Rezervasyon Botu"** uygulamasını başlatın
+
+## Kaldırma
+
+1. **Hesap** sekmesinde **Kayıtlı hesaplar** listesindeki her hesabı çöp kutusu simgesiyle silin (şifreniz işletim sisteminin şifre yöneticisinden de silinir)
+2. **Pano** › **Hatırlatma bildirimi** anahtarını kapatın
+3. Uygulamayı kapatın
+4. Masaüstündeki **"Spor İstanbul Rezervasyon Botu"** kısayolunu silin
+5. Kurulum klasörünü silin:
+   - **Windows** (tek satırlık kurulum): `%LOCALAPPDATA%\Programs\spor-istanbul-rezervasyon-botu` (Başlat › Çalıştır'a yapıştırıp açabilirsiniz)
+   - **macOS** (tek satırlık kurulum): ana klasörünüzdeki `spor-istanbul-rezervasyon-botu`
+   - ZIP ile kurduysanız: ZIP'i çıkardığınız klasör
+
+Kurulum klasörü silinince ayarlarınız, hedefleriniz ve giriş oturumunuz da silinir (hepsi içindeki `state/` klasöründedir).
 
 ## Sorun Giderme
 
@@ -227,7 +237,6 @@ Güncelleme bildirimi gelmiyorsa veya elle güncelleme yapmak istiyorsanız:
 **"Uygulama açık; önce uygulamayı kapatın" / "Uygulama zaten açık" hatası:**
 - Önce gerçekten başka bir pencere/işlem açık mı kontrol edin (Görev Yöneticisi / Activity Monitor'da `pythonw`/`python` arayın) ve varsa kapatın
 - Hâlâ açılmıyorsa (çökme sonrası kilit takılı kalmış olabilir): `state/app.lock` dosyasını silin ve tekrar deneyin
-- Not: `bot.py`'nin tarayıcı kullanan komutları (`login`, `probe`, `watch`, `run`, `scan`, `reservations`, `cancel`, `catalog`) uygulama açıkken bilerek çalışmayı reddeder (çıkış kodu 4) — aynı anda iki yerden siteye girmemek için
 
 **Giriş yapamıyor:**
 - Hesap sekmesinde **"Tarayıcıda elle giriş"** butonunu kullanın

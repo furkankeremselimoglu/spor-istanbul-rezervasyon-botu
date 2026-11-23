@@ -250,5 +250,13 @@ def find_target(grid: Grid, prefs: Iterable[Pref], level_prefix: str) -> tuple[P
 
 
 def is_selection_page(html: str) -> bool:
+    """The seans seçim page. A "Bilet" membership is tied to one branch + facility, so
+    its page has the grid but no filter dropdowns -- recognised by the "Seçim: n / m"
+    counter instead."""
     soup = BeautifulSoup(html, "html.parser")
-    return soup.find(id="ddlBransFiltre") is not None
+    return soup.find(id=["ddlBransFiltre", "pageContent_lblSecim"]) is not None
+
+
+def has_filters(html: str) -> bool:
+    """False on a "Bilet" membership's selection page (no branch/facility dropdowns)."""
+    return 'id="ddlBransFiltre"' in html

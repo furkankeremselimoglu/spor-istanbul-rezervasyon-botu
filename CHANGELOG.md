@@ -4,6 +4,12 @@ Bu dosya kullanıcıları ilgilendiren değişiklikleri listeler. Format [Keep a
 
 ## [Yayınlanmamış]
 
+### Düzeltildi
+- **Bilet üyelikleri** (tek tesis + branşa bağlı, ör. "… 12 KULLANIM") artık çalışıyor: bu üyeliklerin seans sayfasında branş/tesis seçimi olmadığı için bot "seans seçim sayfası değil" hatası verip duruyordu. Bilet seçiliyken hedefin branşı ve tesisi biletinkiyle aynı olmalı; değilse bot rezervasyon denemez, açık bir uyarı verir
+- "Üyelikleri getir" listesi artık ürünün adını gösteriyor (ör. "Çoklu Tesis Tüm Branşlar 12 KULLANIM"); birden fazla bilet/paket varken hepsi "Bilet" diye görünmüyor, doğru olan seçilebiliyor
+
+## [v2026.10.24.2] - 2026-10-24
+
 ### Eklendi
 - Tek satırlık kurulum: macOS ve Windows'ta `install.sh` / `install.ps1` tarafından sürüm otomatik indirilir, kurulur ve güncellenebilir
 
